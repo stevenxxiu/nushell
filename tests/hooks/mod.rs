@@ -326,6 +326,19 @@ fn pre_execution_block_preserve_env_var() {
 }
 
 #[test]
+fn pre_execution_repl_cmd() {
+    let inp = &[
+        &pre_execution_hook_code(r#"{ let-env repl_cmd = $nu.repl-cmd }"#),
+        "echo foo!; $env.repl_cmd",
+    ];
+
+    let actual_repl = nu!(cwd: "tests/hooks", nu_repl_code(inp));
+
+    assert_eq!(actual_repl.err, "");
+    assert_eq!(actual_repl.out, "foo!echo foo!; $env.repl_cmd");
+}
+
+#[test]
 fn env_change_shadow_command() {
     let inp = &[
         &env_change_hook_code_list(

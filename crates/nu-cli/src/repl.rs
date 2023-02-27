@@ -465,6 +465,8 @@ pub fn evaluate_repl(
                 // Right before we start running the code the user gave us,
                 // fire the "pre_execution" hook
                 if let Some(hook) = config.hooks.pre_execution.clone() {
+                    // Includes the entire input, which includes newline characters
+                    engine_state.repl_cmd = Some(s.to_string());
                     if let Err(err) = eval_hook(engine_state, stack, None, vec![], &hook) {
                         report_error_new(engine_state, &err);
                     }

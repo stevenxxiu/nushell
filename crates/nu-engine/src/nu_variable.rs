@@ -36,6 +36,7 @@ impl LazyRecord for NuVariable {
         cols.push("temp-path");
         cols.push("pid");
         cols.push("os-info");
+        cols.push("repl-cmd");
 
         cols
     }
@@ -176,6 +177,16 @@ impl LazyRecord for NuVariable {
                 };
 
                 Ok(os_record)
+            }
+            "repl-cmd" => {
+                if let Some(repl_cmd) = &self.engine_state.repl_cmd {
+                    Ok(Value::String {
+                        val: repl_cmd.to_string(),
+                        span: self.span,
+                    })
+                } else {
+                    Ok(Value::Nothing { span: self.span })
+                }
             }
             _ => err(&format!("Could not find column '{column}'")),
         }
